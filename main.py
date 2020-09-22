@@ -2,6 +2,7 @@ import pygame
 from checkers.game import Game
 from checkers.constants import SQUARE_SIZE, WIDTH, HEIGHT, FPS
 
+
 def main():
 
     window = pygame.display.set_mode((WIDTH, HEIGHT + SQUARE_SIZE))

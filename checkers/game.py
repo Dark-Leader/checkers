@@ -49,10 +49,6 @@ class Game:
                 self.selected = piece
                 if not self.mid_capture:
                     self.valid_moves = self.board.find_legal_moves(piece)
-                    if self.turn == WHITE and self.board.white_left == 1 and not bool(self.valid_moves):
-                        self.board.winner = BLUE
-                    elif self.turn == BLUE and self.board.blue_left == 1 and not bool(self.valid_moves):
-                        self.board.winner = WHITE
                 return True
             return False
         else:
@@ -83,8 +79,6 @@ class Game:
         else:
             return False
         return True
-
-
 
     def draw_valid_moves(self, moves):
         for move in moves:

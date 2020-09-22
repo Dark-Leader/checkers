@@ -1,5 +1,5 @@
 import pygame
-from chekers.constants import BLACK
+from checkers.constants import BLACK
 
 class Button:
 

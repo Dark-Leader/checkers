@@ -68,9 +68,9 @@ class Board:
             else:
                 self.blue_left -= 1
 
-    def find_legal_moves(self, piece, skipped=False):
+    def find_legal_moves(self, piece, skipped=False, mid_capture=False):
         if piece.get_is_king():
-            return self.find_legal_king_moves(piece, skipped)
+            return self.find_legal_king_move(piece, skipped, mid_capture)
         row = piece.get_row()
         col = piece.get_col()
         color = piece.get_color()
@@ -156,155 +156,161 @@ class Board:
                             if possible_square is None:
                                 legal_moves[(bottom + 1, left - 1)] = (bottom, left)
                     if right <= COLS - 2:
-                        bottom_right = self.get_piece(bottom + 1, right + 1)
+                        bottom_right = self.get_piece(bottom, right)
                         if bottom_right is not None and bottom_right.get_color() != color:
                             possible_square = self.get_piece(bottom + 1, right + 1)
                             if possible_square is None:
                                 legal_moves[(bottom + 1, right + 1)] = (bottom, right)
         return legal_moves
 
-    def find_legal_king_moves(self, piece, skipped=False):
+    def find_legal_pawn_moves(self, piece, skipped=False):
         row = piece.get_row()
         col = piece.get_col()
         color = piece.get_color()
-        blocked = False
         left = col - 1
         right = col + 1
-        bottom = row + 1
         top = row - 1
+        bottom = row + 1
         legal_moves = {}
-        if not skipped:
-            while left >= 0 and bottom <= ROWS - 1:
-                bottom_left = self.get_piece(bottom, left)
-                if bottom_left is not None and bottom_left.get_color() == color:
-                    break
-                elif bottom_left is not None and bottom_left.get_color() != color and not blocked:
-                    blocked = True
-                elif bottom_left is not None and bottom_left.get_color() != color and blocked:
-                    break
-                elif bottom_left is None and not blocked:
-                    legal_moves[(bottom, left)] = []
-                elif bottom_left is None and blocked:
-                    legal_moves[(bottom, left)] = (bottom - 1, left + 1)
-                    break
-                left -= 1
-                bottom += 1
-            blocked = False
-            while right <= COLS - 1 and top >= 0:
-                top_right = self.get_piece(top, right)
-                if top_right is not None and top_right.get_color() == color:
-                    break
-                elif top_right is not None and top_right.get_color != color and not blocked:
-                    blocked = True
-                elif top_right is not None and top_right.get_color() != color and blocked:
-                    break
-                elif top_right is None and not blocked:
-                    legal_moves[(top, right)] = []
-                elif top_right is None and blocked:
-                    legal_moves[(top, right)] = (top + 1, right - 1)
-                    break
-                elif top_right.get_color() != color:
-                    blocked = True
-                right += 1
-                top -= 1
-            blocked = False
-            top = row - 1
-            left = col - 1
-            while left >= 0 and top >= 0:
-                top_left = self.get_piece(top, left)
-                if top_left is not None and top_left.get_color() == color:
-                    break
-                elif top_left is not None and top_left.get_color() != color and not blocked:
-                    blocked = True
-                elif top_left is not None and top_left.get_color() != color and blocked:
-                    break
-                elif top_left is None and not blocked:
-                    legal_moves[(top, left)] = []
-                elif top_left is None and blocked:
-                    legal_moves[(top, left)] = (top + 1, left + 1)
-                    break
-                left -= 1
-                top -= 1
-            blocked = False
-            right = col + 1
-            bottom = row + 1
-            while right <= COLS - 1 and bottom <= ROWS - 1:
-                bottom_right = self.get_piece(bottom, right)
-                if bottom_right is not None and bottom_right.get_color() == color:
-                    break
-                elif bottom_right is not None and bottom_right.get_color() != color and not blocked:
-                    blocked = True
-                elif bottom_right is not None and bottom_right.get_color() != color and blocked:
-                    break
-                elif bottom_right is None and not blocked:
-                    legal_moves[(bottom, right)] = []
-                elif bottom_right is None and blocked:
-                    legal_moves[(bottom, right)] = (bottom - 1, right - 1)
-                    break
-                right += 1
-                bottom += 1
-        else:
-            while top >= 0 and right <= COLS - 1:
-                top_right = self.get_piece(top, right)
-                if top_right is None and not blocked:
-                    pass
-                elif top_right is None and blocked:
-                    legal_moves[(top, right)] = (top + 1, right - 1)
-                elif top_right is not None and top_right.get_color() == color:
-                    break
-                elif top_right is not None and top_right.get_color() != color and not blocked:
-                    blocked = True
-                elif top_right is not None and top_right.get_color() != color and blocked:
-                    break
-                right += 1
-                top -= 1
-            top = row - 1
-            blocked = False
-            while top >= 0 and left >= 0:
-                top_left = self.get_piece(top, left)
-                if top_left is None and not blocked:
-                    pass
-                elif top_left is None and blocked:
-                    legal_moves[top, left] = (top + 1, left + 1)
-                elif top_left is not None and top_left.get_color() == color:
-                    break
-                elif top_left is not None and top_left.get_color() != color and not blocked:
-                    blocked = True
-                elif top_left is not None and top_left.get_color() != color and blocked:
-                    break
-                left -= 1
-                top -= 1
-            blocked = False
-            right = col + 1
-            left = col - 1
-            while bottom <= ROWS - 1 and left >= 0:
-                bottom_left = self.get_piece(bottom, left)
-                if bottom_left is None and not blocked:
-                    pass
-                elif bottom_left is None and blocked:
-                    legal_moves[bottom, left] = (bottom - 1, left + 1)
-                elif bottom_left is not None and bottom_left.get_color() == color:
-                    break
-                elif bottom_left is not None and bottom_left.get_color() != color and not blocked:
-                    blocked = True
-                elif bottom_left is not None and bottom_left.get_color() != color and blocked:
-                    break
-                left -= 1
-                bottom += 1
-            bottom = row + 1
-            blocked = False
-            while bottom <= ROWS - 1 and right <= COLS - 1:
-                bottom_right = self.get_piece(bottom, right)
-                if bottom_right is None and not blocked:
-                    pass
-                elif bottom_right is None and blocked:
-                    legal_moves[bottom, right] = (bottom - 1, right - 1)
-                elif bottom_right is not None and bottom_right.get_color() == color:
-                    break
-                elif bottom_right is not None and bottom_right.get_color() != color and not blocked:
-                    blocked = True
-                elif bottom_right is not None and bottom_right.get_color() != color and blocked:
-                    break
-                right += 1
-                bottom += 1
+
+
         return legal_moves
+
+
+
+
+
+    def find_legal_king_move(self, piece, skipped=False, mid_capture=False):
+        legal_moves = {}
+        piece_row = piece.get_row()
+        piece_col = piece.get_col()
+        top_left = False
+        top_right = False
+        bottom_left = False
+        bottom_right = False
+        if skipped:
+            row, col = skipped
+            if row > piece_row and col > piece_col:
+                top_left = True
+            elif row > piece_row and col < piece_col:
+                top_right = True
+            elif row < piece_row and col < piece_col:
+                bottom_right = True
+            else:
+                bottom_left = True
+        legal_moves.update(self.check_top_left_diagonal(piece, top_left, mid_capture))
+        legal_moves.update(self.check_top_right_diagonal(piece, top_right, mid_capture))
+        legal_moves.update(self.check_bottom_left_diagonal(piece, bottom_left, mid_capture))
+        legal_moves.update(self.check_bottom_right_diagonal(piece, bottom_right, mid_capture))
+        return legal_moves
+
+    def check_top_left_diagonal(self, piece, skipped=False, mid_capture=False):
+        color = piece.get_color()
+        moves = {}
+        row = piece.get_row()
+        col = piece.get_col()
+        left = col - 1
+        top = row - 1
+        blocked = False
+        while top >= 0 and left >= 0:
+            new_piece = self.get_piece(top, left)
+            if not blocked and new_piece is None:
+                if skipped or not mid_capture:
+                    moves[(top, left)] = []
+                else:
+                    pass
+            elif new_piece is None and blocked:
+                moves[(top, left)] = blocked
+            elif new_piece is not None and new_piece.get_color() == color:
+                break
+            elif new_piece is not None and new_piece.get_color() != color and not blocked:
+                blocked = (top, left)
+            elif new_piece is not None and new_piece.get_color() != color and blocked:
+                break
+            top -= 1
+            left -= 1
+        return moves
+
+    def check_top_right_diagonal(self, piece, skipped=False, mid_capture=False):
+        color = piece.get_color()
+        moves = {}
+        row = piece.get_row()
+        col = piece.get_col()
+        right = col + 1
+        top = row - 1
+        blocked = False
+        while top >= 0 and right <= COLS - 1:
+            new_piece = self.get_piece(top, right)
+            if not blocked and new_piece is None:
+                if skipped or not mid_capture:
+                    moves[(top, right)] = []
+                else:
+                    pass
+            elif new_piece is None and blocked:
+                moves[(top, right)] = blocked
+            elif new_piece is not None and new_piece.get_color() == color:
+                break
+            elif new_piece is not None and new_piece.get_color() != color and not blocked:
+                blocked = (top, right)
+            elif new_piece is not None and new_piece.get_color() != color and blocked:
+                break
+            top -= 1
+            right += 1
+        return moves
+
+    def check_bottom_right_diagonal(self, piece, skipped=False, mid_capture=False):
+        color = piece.get_color()
+        moves = {}
+        row = piece.get_row()
+        col = piece.get_col()
+        right = col + 1
+        bottom = row + 1
+        blocked = False
+        while bottom <= ROWS - 1 and right <= COLS - 1:
+            new_piece = self.get_piece(bottom, right)
+            if not blocked and new_piece is None:
+                if skipped or not mid_capture:
+                    moves[(bottom, right)] = []
+                else:
+                    pass
+            elif new_piece is None and blocked:
+                moves[(bottom, right)] = blocked
+            elif new_piece is not None and new_piece.get_color() == color:
+                break
+            elif new_piece is not None and new_piece.get_color() != color and not blocked:
+                blocked = (bottom, right)
+            elif new_piece is not None and new_piece.get_color() != color and blocked:
+                break
+            bottom += 1
+            right += 1
+        return moves
+
+    def check_bottom_left_diagonal(self, piece, skipped=False, mid_capture=False):
+        color = piece.get_color()
+        moves = {}
+        row = piece.get_row()
+        col = piece.get_col()
+        left = col - 1
+        bottom = row + 1
+        blocked = False
+        while bottom <= ROWS - 1 and left >= 0:
+            new_piece = self.get_piece(bottom, left)
+            if not blocked and new_piece is None:
+                if skipped or not mid_capture:
+                    moves[(bottom, left)] = []
+                elif False:
+                    moves[(bottom, left)] = []
+                else:
+                    pass
+            elif new_piece is None and blocked:
+                moves[(bottom, left)] = blocked
+            elif new_piece is not None and new_piece.get_color() == color:
+                break
+            elif new_piece is not None and new_piece.get_color() != color and not blocked:
+                blocked = (bottom, left)
+            elif new_piece is not None and new_piece.get_color() != color and blocked:
+                break
+            bottom += 1
+            left -= 1
+        return moves
+

@@ -60,7 +60,7 @@ class Game:
             skipped = self.valid_moves[(row, col)]
             if skipped:
                 self.board.remove(skipped)
-                self.valid_moves = self.board.find_legal_moves(self.board.get_piece(row, col), True)
+                self.valid_moves = self.board.find_legal_moves(self.board.get_piece(row, col), skipped, True)
                 if not bool(self.valid_moves):
                     self.change_turn()
                 else:

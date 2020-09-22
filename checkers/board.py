@@ -53,16 +53,35 @@ class Board:
         elif piece.get_color() == BLUE and row == ROWS - 1 and not piece.get_is_king():
             piece.make_king()
 
-    def check_for_winner(self):
+    def check_for_winner(self, color):
         if self.blue_left == 0:
             self.winner = WHITE
         elif self.white_left == 0:
             self.winner = BLUE
+        elif self.check_stalemate(color):
+            if self.white_left > self.blue_left:
+                self.winner = WHITE
+            elif self.white_left == self.blue_left:
+                self.winner = "Draw"
+            else:
+                self.winner = BLUE
         if self.winner == WHITE:
             print("White Won!")
         elif self.winner == BLUE:
             print("Blue won!")
+        elif self.winner == "Draw":
+            print("It's a Draw!")
         return self.winner
+
+    def check_stalemate(self, color):
+        for row in range(ROWS):
+            for col in range(COLS):
+                piece = self.get_piece(row, col)
+                if piece and piece.get_color() == color:
+                    moves = self.find_legal_moves(piece)
+                    if bool(moves):
+                        return False
+        return True
 
     def remove(self, pos):
         row, col = pos

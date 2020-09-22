@@ -34,7 +34,7 @@ class Game:
         self.win.blit(text, (WIDTH // 2 - SQUARE_SIZE // 2, HEIGHT + SQUARE_SIZE // 2.5))
 
     def get_winner(self):
-        return self.board.check_for_winner()
+        return self.board.check_for_winner(self.turn)
 
     def select(self, position):
         row, col = self.get_position(position)

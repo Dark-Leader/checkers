@@ -8,10 +8,13 @@ GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 LIGHT_BLUE = (135, 206, 250)
+BROWN = (40, 26, 13)
 WIDTH = HEIGHT = 800
 SQUARE_SIZE = WIDTH // ROWS
 KING_IMAGE_OFFSET = 10
 KING_SIZE = 20
+TEXT_OFFSET = 5
 crown = pygame.image.load("resources/crown.png")
 crown = pygame.transform.scale(crown, (KING_SIZE, KING_SIZE))
 POSSIBLE_MOVE_RADIUS = 15
+FPS = 60

@@ -1,4 +1,4 @@
-from .constants import WIDTH, HEIGHT, SQUARE_SIZE, ROWS, COLS, RED, BLUE, crown
+from .constants import SQUARE_SIZE, crown
 import pygame
 
 

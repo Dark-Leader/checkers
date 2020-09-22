@@ -1,5 +1,5 @@
 from .board import Board
-from .constants import WHITE, BLUE, LIGHT_BLUE, SQUARE_SIZE, POSSIBLE_MOVE_RADIUS, WIDTH, HEIGHT, ROWS
+from .constants import WHITE, BLUE, LIGHT_BLUE, SQUARE_SIZE, POSSIBLE_MOVE_RADIUS, WIDTH, HEIGHT, ROWS, BROWN
 import pygame
 from .shapes.button import Button
 
@@ -12,6 +12,7 @@ class Game:
     def update(self):
         self.board.draw(self.win)
         self.draw_valid_moves(self.valid_moves)
+        self.draw_turn()
         if self.mid_capture:
             self.button.draw(self.win)
         pygame.display.flip()
@@ -22,8 +23,15 @@ class Game:
         self.turn = WHITE
         self.valid_moves = {}
         self.button = Button(WIDTH // 2 + SQUARE_SIZE * 2, HEIGHT + SQUARE_SIZE // 3, SQUARE_SIZE, SQUARE_SIZE // 3,
-                             BLUE, "End Turn")
+                             BROWN, "End Turn")
         self.mid_capture = False
+
+    def draw_turn(self):
+        pygame.draw.rect(self.win, LIGHT_BLUE, (0, HEIGHT, WIDTH, SQUARE_SIZE))
+        message = "White's turn" if self.turn == WHITE else "Blue's turn"
+        font = pygame.font.Font(None, 30)
+        text = font.render(message, 1, self.turn)
+        self.win.blit(text, (WIDTH // 2 - SQUARE_SIZE // 2, HEIGHT + SQUARE_SIZE // 2.5))
 
     def get_winner(self):
         return self.board.check_for_winner()
@@ -41,13 +49,18 @@ class Game:
                 self.selected = piece
                 if not self.mid_capture:
                     self.valid_moves = self.board.find_legal_moves(piece)
+                    if self.turn == WHITE and self.board.white_left == 1 and not bool(self.valid_moves):
+                        self.board.winner = BLUE
+                    elif self.turn == BLUE and self.board.blue_left == 1 and not bool(self.valid_moves):
+                        self.board.winner = WHITE
                 return True
             return False
         else:
-            if self.button.clicked(position):
+            if self.button.clicked(position) and self.mid_capture:
                 self.change_turn()
 
-    def get_position(self, position):
+    @staticmethod
+    def get_position(position):
         x, y = position
         row = int(y // SQUARE_SIZE)
         col = int(x // SQUARE_SIZE)
@@ -70,6 +83,8 @@ class Game:
         else:
             return False
         return True
+
+
 
     def draw_valid_moves(self, moves):
         for move in moves:

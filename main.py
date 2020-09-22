@@ -1,10 +1,9 @@
 import pygame
 from checkers.game import Game
-from checkers.constants import SQUARE_SIZE, WIDTH, HEIGHT
-
-FPS = 60
+from checkers.constants import SQUARE_SIZE, WIDTH, HEIGHT, FPS
 
 def main():
+
     window = pygame.display.set_mode((WIDTH, HEIGHT + SQUARE_SIZE))
     pygame.display.set_caption("Checkers")
     game = Game(window)
@@ -25,6 +24,8 @@ def main():
                 game.select(pos)
 
         game.update()
+        if game.get_winner():
+            running = False
     pygame.quit()
 
 

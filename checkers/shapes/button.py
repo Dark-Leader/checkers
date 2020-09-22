@@ -1,5 +1,5 @@
 import pygame
-from checkers.constants import BLACK
+from checkers.constants import BLACK, TEXT_OFFSET
 
 class Button:
 
@@ -19,6 +19,6 @@ class Button:
 
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height))
-        font = pygame.font.Font(None, 20)
+        font = pygame.font.Font(None, 24)
         text = font.render(self.message, 1, BLACK)
-        win.blit(text, (self.x + self.width // 4, (self.y * 2 + self.height) // 2))
+        win.blit(text, (self.x + self.width // 5, (self.y * 2 + self.height) // 2 - TEXT_OFFSET))

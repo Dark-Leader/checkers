@@ -1,5 +1,5 @@
 import pygame
-from checkers.constants import SQUARE_SIZE, WIDTH, HEIGHT, FPS
+from checkers.constants import FPS
 from animations.animation import Animation
 
 def main():

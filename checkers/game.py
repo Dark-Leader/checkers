@@ -15,7 +15,6 @@ class Game:
         self.draw_turn()
         if self.mid_capture:
             self.button.draw(self.win)
-        pygame.display.flip()
 
     def _initialize(self):
         self.board = Board()

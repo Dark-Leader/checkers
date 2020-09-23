@@ -65,12 +65,6 @@ class Board:
                 self.winner = "Draw"
             else:
                 self.winner = BLUE
-        if self.winner == WHITE:
-            print("White Won!")
-        elif self.winner == BLUE:
-            print("Blue won!")
-        elif self.winner == "Draw":
-            print("It's a Draw!")
         return self.winner
 
     def check_stalemate(self, color):
@@ -212,10 +206,27 @@ class Board:
                 bottom_right = True
             else:
                 bottom_left = True
-        legal_moves.update(self.check_top_left_diagonal(piece, top_left, mid_capture))
-        legal_moves.update(self.check_top_right_diagonal(piece, top_right, mid_capture))
-        legal_moves.update(self.check_bottom_left_diagonal(piece, bottom_left, mid_capture))
-        legal_moves.update(self.check_bottom_right_diagonal(piece, bottom_right, mid_capture))
+        if bottom_right:
+            legal_moves.update(self.check_top_right_diagonal(piece, top_right, mid_capture))
+            legal_moves.update(self.check_bottom_left_diagonal(piece, bottom_left, mid_capture))
+            legal_moves.update(self.check_bottom_right_diagonal(piece, bottom_right, mid_capture))
+        elif bottom_left:
+            legal_moves.update(self.check_top_left_diagonal(piece, top_left, mid_capture))
+            legal_moves.update(self.check_bottom_left_diagonal(piece, bottom_left, mid_capture))
+            legal_moves.update(self.check_bottom_right_diagonal(piece, bottom_right, mid_capture))
+        elif top_left:
+            legal_moves.update(self.check_top_left_diagonal(piece, top_left, mid_capture))
+            legal_moves.update(self.check_bottom_left_diagonal(piece, bottom_left, mid_capture))
+            legal_moves.update(self.check_top_right_diagonal(piece, top_right, mid_capture))
+        elif top_right:
+            legal_moves.update(self.check_top_left_diagonal(piece, top_left, mid_capture))
+            legal_moves.update(self.check_bottom_right_diagonal(piece, bottom_right, mid_capture))
+            legal_moves.update(self.check_top_right_diagonal(piece, top_right, mid_capture))
+        else:
+            legal_moves.update(self.check_top_left_diagonal(piece, top_left, mid_capture))
+            legal_moves.update(self.check_top_right_diagonal(piece, top_right, mid_capture))
+            legal_moves.update(self.check_bottom_left_diagonal(piece, bottom_left, mid_capture))
+            legal_moves.update(self.check_bottom_right_diagonal(piece, bottom_right, mid_capture))
         return legal_moves
 
     def check_top_left_diagonal(self, piece, skipped=False, mid_capture=False):

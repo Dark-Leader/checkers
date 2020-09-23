@@ -3,7 +3,7 @@ from checkers.constants import BLACK, TEXT_OFFSET
 
 class Button:
 
-    def __init__(self, x, y, width, height, color, text):
+    def __init__(self, x, y, width, height, color, text= ""):
         self.x = x
         self.y = y
         self.width = width

@@ -2,7 +2,6 @@ import pygame
 from checkers.game import Game
 from checkers.constants import WIDTH, HEIGHT, SQUARE_SIZE
 from .end_screen import EndScreen
-import time
 
 
 class Animation:
